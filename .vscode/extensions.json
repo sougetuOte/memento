@@ -1,0 +1,28 @@
+{
+  "recommendations": [
+    // Claude Code Extension（必須）
+    "anthropic.claude-code",
+    
+    // ログ表示用
+    "emilast.LogFileHighlighter",
+    
+    // Markdown編集（Memory Bank用）
+    "yzhang.markdown-all-in-one",
+    "bierner.markdown-preview-github-styles",
+    
+    // Git統合
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    
+    // ターミナル改善
+    "tyriar.terminal-tabs",
+    
+    // ファイル監視
+    "appulate.filewatcher",
+    
+    // JSON編集
+    "zainchen.json"
+  ],
+  
+  "unwantedRecommendations": []
+}

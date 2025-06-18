@@ -1,0 +1,41 @@
+{
+  "name": "memento",
+  "version": "1.0.0",
+  "description": "Mementoシステム - AI記憶支援開発環境",
+  "main": "commander.js",
+  "bin": {
+    "memento": "./memento"
+  },
+  "scripts": {
+    "postinstall": "chmod +x memento",
+    "start": "node commander.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "memento",
+    "claude",
+    "claudecode",
+    "ai",
+    "commander",
+    "worker",
+    "mcp",
+    "development",
+    "memory"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "preferGlobal": true,
+  "os": [
+    "linux",
+    "darwin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sougetuOte/memento.git"
+  }
+}

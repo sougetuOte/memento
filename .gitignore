@@ -1,0 +1,25 @@
+# Mementoシステム
+.memento/logs/
+.memento/tasks/processing/
+.memento/tasks/completed/
+.memento/system/status.json
+.memento_backups/
+
+# ログファイル
+*.log
+*.log.gz
+
+# OS
+.DS_Store
+Thumbs.db
+
+# エディタ
+*.swp
+*.swo
+*~
+.idea/
+*.sublime-*
+
+# Node.js（もしnpm installする場合）
+node_modules/
+npm-debug.log*
