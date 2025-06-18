@@ -3,8 +3,11 @@
 ## 📋 前提条件の確認（1分）
 
 ```bash
-# Node.js v22以上の確認
-node -v  # v22.x.x 以上であること
+# Node.js v22.0.0以上の確認
+node -v  # v22.0.0 以上であること
+
+# nvmを使用している場合（.nvmrcファイルがあるプロジェクトで）
+nvm use  # .nvmrcに指定されたNode.jsバージョンを使用
 
 # ClaudeCode CLIの確認
 claude --version  # インストール済みであること
@@ -123,3 +126,9 @@ memento init
 ---
 
 **ヒント**: VSCodeを使用している場合は、Claude Extensionと組み合わせることで、より効率的な開発が可能です！
+
+## 📖 さらに詳しく
+
+- [完全なドキュメント](README.md) - すべての機能と詳細設定
+- [テストシナリオ集](TEST_SCENARIOS.md) - 実際の使用例とベストプラクティス
+- [貢献ガイドライン](CONTRIBUTING.md) - 開発に参加する方法

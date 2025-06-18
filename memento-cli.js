@@ -40,6 +40,7 @@ const commands = {
   reset: 'システムリセット',
   reflect: '最近の活動を要約',
   dream: 'バックグラウンドで最適化実行',
+  uninstall: 'Mementoをアンインストール',
   help: 'ヘルプを表示'
 };
 
@@ -85,6 +86,9 @@ class MementoCLI {
         break;
       case 'dream':
         await this.dream();
+        break;
+      case 'uninstall':
+        await this.uninstall();
         break;
       case 'help':
       default:
@@ -586,6 +590,66 @@ class MementoCLI {
       
     } catch (error) {
       console.error(`${colors.red}❌ リセットエラー: ${error.message}${colors.reset}`);
+    }
+  }
+
+  /**
+   * Mementoアンインストール
+   */
+  async uninstall() {
+    console.log(`${colors.yellow}⚠️  Mementoをアンインストールします${colors.reset}`);
+    console.log('\n以下の操作を実行します:');
+    console.log('  - 全プロジェクトのCommanderを停止');
+    console.log('  - /usr/local/bin/mementoを削除');
+    console.log('  - ~/.mementoディレクトリを削除');
+    console.log('  - 各プロジェクトの.mementoディレクトリは保持されます');
+    
+    const answer = await this.prompt(
+      `\n${colors.red}本当にアンインストールしますか？ (y/N): ${colors.reset}`
+    );
+    
+    if (answer.toLowerCase() !== 'y') {
+      console.log('アンインストールをキャンセルしました');
+      return;
+    }
+    
+    try {
+      // 現在のプロジェクトのCommanderを停止
+      console.log('\n🛑 Commanderを停止中...');
+      try {
+        await this.stop();
+      } catch {
+        // エラーは無視（起動していない場合）
+      }
+      
+      // グローバルのシンボリックリンクを削除
+      console.log('🔗 グローバルコマンドを削除中...');
+      try {
+        await fs.unlink('/usr/local/bin/memento');
+      } catch (error) {
+        console.log('  sudoで再実行が必要かもしれません:');
+        console.log(`  ${colors.bright}sudo rm -f /usr/local/bin/memento${colors.reset}`);
+      }
+      
+      // インストールディレクトリを削除
+      const installDir = path.join(process.env.HOME, '.memento');
+      if (await fs.access(installDir).then(() => true).catch(() => false)) {
+        console.log('📁 インストールディレクトリを削除中...');
+        await fs.rm(installDir, { recursive: true, force: true });
+      }
+      
+      console.log(`\n${colors.green}✅ アンインストール完了！${colors.reset}`);
+      console.log('\n以下の項目は手動で削除してください:');
+      console.log('  - 各プロジェクトの.mementoディレクトリ');
+      console.log('  - 各プロジェクトの.memento_backupsディレクトリ');
+      console.log('  - ~/.bashrcのエイリアス設定（追加した場合）');
+      console.log(`\n${colors.cyan}Mementoをご利用いただきありがとうございました！${colors.reset}`);
+      
+    } catch (error) {
+      console.error(`${colors.red}❌ アンインストールエラー: ${error.message}${colors.reset}`);
+      console.log('\n手動でアンインストールする場合:');
+      console.log('  sudo rm -f /usr/local/bin/memento');
+      console.log('  rm -rf ~/.memento');
     }
   }
 

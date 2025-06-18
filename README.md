@@ -14,15 +14,21 @@ Mementoは、ClaudeCodeをベースにした個人開発者向けのAI支援開�
 ## 🚀 クイックスタート
 
 ### 前提条件
-- Node.js v22以上
+- Node.js v22.0.0以上（`.nvmrc`ファイルでバージョン管理）
 - ClaudeCode CLI (`claude`)
 - Ubuntu/macOS（WSL2でも動作）
+
+開発者の場合：
+```bash
+# nvmでバージョン管理
+nvm use  # .nvmrcから自動的にv22.0.0を使用
+```
 
 ### インストール
 
 #### オプション1: ワンライナーインストール（推奨）
 ```bash
-curl -sSL https://your-domain.com/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/sougetuOte/memento/main/install.sh | bash
 ```
 
 #### オプション2: 手動インストール
@@ -190,17 +196,69 @@ memento backup create
 memento stop
 ```
 
+## 🗑️ アンインストール
+
+### コマンドでアンインストール（推奨）
+```bash
+memento uninstall
+```
+
+このコマンドは以下を実行します：
+- 実行中のCommanderを停止
+- グローバルコマンド（/usr/local/bin/memento）を削除
+- インストールディレクトリ（~/.memento）を削除
+
+### 手動でアンインストール
+```bash
+# 1. 実行中のCommanderを停止
+memento stop
+
+# 2. グローバルコマンドを削除（要sudo）
+sudo rm -f /usr/local/bin/memento
+
+# 3. インストールディレクトリを削除
+rm -rf ~/.memento
+
+# 4. 各プロジェクトのデータを削除（必要に応じて）
+rm -rf .memento
+rm -rf .memento_backups
+
+# 5. .bashrcからエイリアスを削除（追加した場合）
+# 以下の行を.bashrcから削除：
+# alias mm='memento'
+# alias mms='memento status'
+# alias mml='memento logs --tail 20'
+# alias mmm='memento memory'
+# alias mmr='memento reflect'
+```
+
+### プロジェクト単位でのクリーンアップ
+特定のプロジェクトからMementoデータを削除する場合：
+```bash
+# プロジェクトディレクトリで実行
+memento reset --force
+```
+
 ## 📝 ライセンス
 
 MIT License
 
 ## 🤝 貢献
 
-プルリクエスト歓迎です！
+プルリクエスト歓迎です！詳細は [CONTRIBUTING.md](CONTRIBUTING.md) をご覧ください。
+
+開発環境の設定：
+- `.editorconfig` でコードスタイルを統一
+- `.nvmrc` でNode.jsバージョンを固定
 
 ## 📞 サポート
 
 Issues: https://github.com/sougetuOte/memento/issues
+
+## 📚 詳細ドキュメント
+
+- [テストシナリオ集](TEST_SCENARIOS.md) - 実際の使用例とベストプラクティス
+- [貢献ガイドライン](CONTRIBUTING.md) - 開発に参加する方法
 
 ## 🚀 クイックインストール
 
@@ -214,3 +272,8 @@ cd memento
 chmod +x memento
 sudo ln -s $(pwd)/memento /usr/local/bin/memento
 ```
+
+## 📚 詳細ドキュメント
+
+- [TEST_SCENARIOS.md](TEST_SCENARIOS.md) - 実践的なテストシナリオ
+- [CONTRIBUTING.md](CONTRIBUTING.md) - 貢献ガイドライン
