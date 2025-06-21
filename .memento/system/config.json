@@ -1,0 +1,8 @@
+{
+  "maxWorkers": 3,
+  "workerTimeout": 300000,
+  "retryAttempts": 3,
+  "logLevel": "INFO",
+  "autoBackup": true,
+  "backupInterval": "daily"
+}

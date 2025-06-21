@@ -188,11 +188,19 @@ class MementoCLI {
       
       this.commanderProcess.unref();
       
-      // 起動確認（3秒待機）
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // 起動確認（最大10秒待機）
+      let started = false;
+      for (let i = 0; i < 10; i++) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const newStatus = await this.getStatus();
+        
+        if (newStatus && newStatus.commander.status === 'running') {
+          started = true;
+          break;
+        }
+      }
       
-      const newStatus = await this.getStatus();
-      if (newStatus && newStatus.commander.status === 'running') {
+      if (started) {
         console.log(`${colors.green}✅ Commander起動完了！${colors.reset}`);
         console.log(`\nClaudeCodeと対話を開始するには、別のターミナルで以下を実行:`);
         console.log(`  ${colors.bright}cd ${PROJECT_ROOT}${colors.reset}`);
@@ -805,6 +813,72 @@ class MementoCLI {
       } else {
         await fs.copyFile(srcPath, destPath);
       }
+    }
+  }
+
+  async listBackups() {
+    try {
+      const backupBaseDir = path.join(PROJECT_ROOT, '.memento_backups');
+      const backups = await fs.readdir(backupBaseDir).catch(() => []);
+      
+      console.log(`${colors.cyan}📦 利用可能なバックアップ${colors.reset}`);
+      console.log('─'.repeat(50));
+      
+      if (backups.length === 0) {
+        console.log('バックアップが見つかりません');
+        return;
+      }
+      
+      for (const backup of backups) {
+        const stats = await fs.stat(path.join(backupBaseDir, backup));
+        console.log(`  ${backup} (${new Date(stats.mtime).toLocaleString()})`);
+      }
+    } catch (error) {
+      console.error(`${colors.red}❌ バックアップ一覧エラー: ${error.message}${colors.reset}`);
+    }
+  }
+
+  async restoreBackup(backupName) {
+    if (!backupName) {
+      console.error(`${colors.red}バックアップ名を指定してください${colors.reset}`);
+      return;
+    }
+    
+    try {
+      const backupPath = path.join(PROJECT_ROOT, '.memento_backups', backupName);
+      
+      // バックアップの存在確認
+      try {
+        await fs.access(backupPath);
+      } catch {
+        console.error(`${colors.red}指定されたバックアップが見つかりません: ${backupName}${colors.reset}`);
+        return;
+      }
+      
+      // 確認プロンプト
+      const answer = await this.prompt(
+        `${colors.yellow}⚠️  現在のデータは上書きされます。続行しますか？ (y/N): ${colors.reset}`
+      );
+      if (answer.toLowerCase() !== 'y') {
+        console.log('復元をキャンセルしました');
+        return;
+      }
+      
+      // Commanderを停止
+      await this.stop();
+      
+      // 現在の.mementoを削除
+      await fs.rm(MEMENTO_DIR, { recursive: true, force: true });
+      
+      // バックアップから復元
+      await this.copyDirectory(backupPath, MEMENTO_DIR);
+      
+      console.log(`${colors.green}✅ バックアップから復元しました: ${backupName}${colors.reset}`);
+      console.log('\nCommanderを再起動してください:');
+      console.log(`  ${colors.bright}memento start${colors.reset}`);
+      
+    } catch (error) {
+      console.error(`${colors.red}❌ 復元エラー: ${error.message}${colors.reset}`);
     }
   }
 }
